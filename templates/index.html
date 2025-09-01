@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-microscope microscope-icon me-3"></i>
+                Number Microscope
+            </h1>
+            <p class="lead text-muted">
+                Discover hidden patterns by examining the first digits of integer and fractional parts
+            </p>
+        </div>
+
+        <!-- Algorithm Explanation -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>
+                    How it works
+                </h5>
+                <p class="card-text">
+                    The Number Microscope algorithm extracts the first digit of the integer part and 
+                    the first digit of the fractional part of any number, creating a pattern in the format <code>X.Y</code>.
+                </p>
+                <div class="bg-dark p-3 rounded">
+                    <strong>Example:</strong> <code>261.63</code> → <code>2.6</code><br>
+                    <small class="text-muted">First digit of 261 is 2, first digit of 63 is 6</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Number Analysis -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-search me-2"></i>
+                    Analyze Single Number
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('analyze_single') }}">
+                    <div class="mb-3">
+                        <label for="single_number" class="form-label">Enter a number:</label>
+                        <input type="text" class="form-control" id="single_number" name="single_number" 
+                               placeholder="e.g., 261.63" required>
+                        <div class="form-text">Enter any positive or negative number (integer or decimal)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-play me-2"></i>
+                        Analyze
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Multiple Numbers Analysis -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    Analyze Number Sequence
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('analyze') }}">
+                    <div class="mb-3">
+                        <label for="numbers" class="form-label">Enter numbers (separated by commas, spaces, or new lines):</label>
+                        <textarea class="form-control" id="numbers" name="numbers" rows="5" 
+                                  placeholder="261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25" required></textarea>
+                        <div class="form-text">
+                            You can separate numbers with commas, spaces, semicolons, or put each number on a new line
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Analyze Sequence
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Example Section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Example Use Cases
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Music Frequencies (Hz)</h6>
+                        <code class="small">261.63, 293.66, 329.63, 349.23</code>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Stock Prices</h6>
+                        <code class="small">150.25, 151.80, 148.90, 152.45</code>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <h6>Scientific Measurements</h6>
+                        <code class="small">3.14159, 2.71828, 1.41421</code>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Financial Data</h6>
+                        <code class="small">1000.50, 999.75, 1001.25</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

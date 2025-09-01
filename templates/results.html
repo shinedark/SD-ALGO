@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Results - Number Microscope{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Analysis Results
+                </h2>
+                <p class="text-muted mb-0">
+                    {% if single_mode %}
+                        Single number analysis
+                    {% else %}
+                        Processed {{ valid_numbers }} of {{ total_numbers }} numbers
+                    {% endif %}
+                </p>
+            </div>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+                New Analysis
+            </a>
+        </div>
+
+        <!-- Summary Cards -->
+        {% if not single_mode %}
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ total_numbers }}</h5>
+                        <p class="card-text text-muted">Total Numbers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">{{ valid_numbers }}</h5>
+                        <p class="card-text text-muted">Successfully Processed</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ analysis.fractional_sequence|length }}</h5>
+                        <p class="card-text text-muted">Pattern Length</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Results Table -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-table me-2"></i>
+                    Number Transformations
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Original Number</th>
+                                <th>Transformed Pattern</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in analysis.results %}
+                            <tr>
+                                <td class="number-pattern">{{ result.original }}</td>
+                                <td>
+                                    {% if result.pattern %}
+                                        <span class="number-pattern pattern-highlight">{{ result.pattern }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.error %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-times me-1"></i>
+                                            Error
+                                        </span>
+                                        <br><small class="text-muted">{{ result.error }}</small>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check me-1"></i>
+                                            Success
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fractional Digit Analysis -->
+        {% if analysis.fractional_sequence and analysis.fractional_sequence|length > 1 %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-search-plus me-2"></i>
+                    Fractional Digit Pattern Analysis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Individual Fractional Digits:</h6>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            {% for digit in analysis.fractional_sequence %}
+                                <span class="badge bg-info fs-6 number-pattern">{{ digit }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Complete Fractional Pattern:</h6>
+                        <div class="pattern-highlight number-pattern fs-5 text-center p-3">
+                            {{ analysis.fractional_pattern }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pattern Statistics -->
+                <div class="mt-4">
+                    <h6>Pattern Statistics:</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="bg-dark p-2 rounded text-center">
+                                <small class="text-muted">Length</small><br>
+                                <strong>{{ analysis.fractional_pattern|length }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="bg-dark p-2 rounded text-center">
+                                <small class="text-muted">Unique Digits</small><br>
+                                <strong>{{ analysis.fractional_pattern|list|unique|length }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-dark p-2 rounded">
+                                <small class="text-muted">Digit Frequency:</small><br>
+                                {% set digit_counts = {} %}
+                                {% for digit in analysis.fractional_pattern %}
+                                    {% if digit_counts.update({digit: digit_counts.get(digit, 0) + 1}) %}{% endif %}
+                                {% endfor %}
+                                {% for digit, count in digit_counts.items() %}
+                                    <span class="badge bg-secondary me-1">{{ digit }}: {{ count }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Explanation -->
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Understanding the Results
+                </h6>
+                <p class="card-text small">
+                    The Number Microscope reveals hidden patterns by extracting the first significant digits. 
+                    The transformed pattern shows the first digit of the integer part followed by the first digit 
+                    of the fractional part. This technique can reveal underlying structures in data sets like 
+                    musical frequencies, stock prices, or scientific measurements.
+                </p>
+                {% if not single_mode and analysis.fractional_sequence|length > 1 %}
+                <p class="card-text small">
+                    The fractional digit sequence analysis shows how the first fractional digits relate to each other, 
+                    potentially revealing mathematical relationships or patterns in your data.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
