@@ -147,7 +147,8 @@
                         <div class="col-md-3">
                             <div class="bg-dark p-2 rounded text-center">
                                 <small class="text-muted">Unique Digits</small><br>
-                                <strong>{{ analysis.fractional_pattern|list|unique|length }}</strong>
+                                {% set unique_digits = analysis.fractional_pattern|list|unique|list %}
+                                <strong>{{ unique_digits|length }}</strong>
                             </div>
                         </div>
                         <div class="col-md-6">
